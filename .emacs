@@ -287,6 +287,18 @@ With a prefix argument, insert a newline above the current line."
 (fset 'insert-header-guards-from-register-h
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([134217788 C-S-return 35 105 102 110 100 101 102 32 24 114 105 104 return 35 100 101 102 105 110 101 32 95 95 backspace backspace 24 114 105 104 134217790 C-return 35 101 110 100 102 backspace 105 102 32 kp-divide kp-multiply 32 24 114 105 104 32 kp-multiply kp-divide] 0 "%d")) arg)))
 
+(defun my-insert-pair-around-line (str)
+  (interactive "sSurrounding text: ")
+  (goto-char (line-beginning-position))
+  (insert str)
+  (end-of-line)
+  (insert str))
+
+(defun my-insert-pair-line-or-mark (str)
+  (interactive "sSurrounding text:")
+  (if (use-region-p)
+      (insert-pair 1 str str)
+    my-insert-pair-line-or-mark))
 
 ;; Functions to increment/decrement decimal numbers (can be prefixed with C-u <number>)
 (defun my-increment-number-decimal (&optional arg)
