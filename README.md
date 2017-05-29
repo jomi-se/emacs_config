@@ -37,6 +37,7 @@ The following are all packages installed through package-list-packages
 * smex
 * sparql-mode
 * sr-speedbar
+* vala-mode
 * volatile-highlights
 * xah-replace-pairs
 * xcscope
