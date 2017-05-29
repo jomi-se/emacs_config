@@ -171,7 +171,7 @@
 (require 'org)
 (define-key global-map "\C-cl" 'org-store-link)
 (define-key global-map "\C-ca" 'org-agenda)
-(setq org-log-done t)
+;; (setq org-log-done t)
 
 ;; Use Line wrapping for org-mode
 (setq org-startup-truncated 'nil)
