@@ -1,6 +1,6 @@
 # Emacs config
 
-This is a raw config file that depends on some isntalled packages, either through ELPA/MELPA/etc or manually installed.
+This is a raw config file that depends on some installed packages, either through ELPA/MELPA/etc or manually installed.
 
 It won't download any packages for you.
 
