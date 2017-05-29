@@ -148,6 +148,7 @@
 (setq inhibit-splash-screen t
       initial-scratch-message nil)
 (tool-bar-mode -1)
+(scroll-bar-mode -1)
 (setq column-number-mode t)
 (autopair-global-mode)
 
