@@ -124,7 +124,7 @@
 (ido-vertical-mode)
 (ido-vertical-mode 1)
 (setq-default ido-vertical-define-keys 'C-n-C-p-up-and-down)
-;; TODO: add a variable or something to choose between smex or helm
+;; TODO: add a viariable or something to choose between smex or helm
 ;; Maybe add a lightweight v/s helm config?
 ;; (global-set-key (kbd "M-x") 'smex)
 
