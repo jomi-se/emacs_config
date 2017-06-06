@@ -19,11 +19,14 @@ The following are all packages installed through package-list-packages
 * flx-ido
 * flycheck
 * flycheck-tip
+* ggtags
 * haskell-mode
 * helm
+* helm-gtags
 * highlight-symbol
 * ido-vertical-mode
 * jdee
+* js2-mode
 * magit
 * markdown-mode
 * multi-term
