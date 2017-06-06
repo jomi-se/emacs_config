@@ -542,6 +542,9 @@ With a prefix argument, insert a newline above the current line."
 (global-set-key (kbd "C-x b") 'helm-mini)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
+(when (executable-find "curl")
+  (setq helm-net-prefer-curl t))
+
 (setq helm-buffers-fuzzy-matching           t
       helm-recentf-fuzzy-match              t
       helm-M-x-fuzzy-match                  t
@@ -564,13 +567,11 @@ With a prefix argument, insert a newline above the current line."
       (push '(c-mode . semantic-format-tag-summarize) helm-semantic-display-style)
       (push '(c++-mode . semantic-format-tag-summarize) helm-semantic-display-style))
 
-(when (executable-find "curl")
-  (setq helm-google-suggest-use-curl-p t))
-
 (setq helm-autoresize-max-height 0)
 (setq helm-autoresize-min-height 40)
 (helm-autoresize-mode 1)
 
+(helm-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;            HELM CONFIG END           ;;
