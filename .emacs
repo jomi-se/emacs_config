@@ -481,6 +481,11 @@ With a prefix argument, insert a newline above the current line."
 (defun insert-current-date () (interactive)
        (insert (shell-command-to-string "echo -n $(date +%d-%m-%Y)")))
 
+;; JavaScript stuff
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-to-list 'interpreter-mode-alist '("node" . js2-mode))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;              HELM CONFIG             ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
