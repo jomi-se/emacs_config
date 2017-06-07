@@ -112,6 +112,7 @@
 (require 'autopair)
 (require 'ibuffer)
 (require 'uniquify)
+(require 'fullframe)
 
 ;; Use C-c left/right arrow to undo/redo last window
 ;; configuration change (e.g revert last C-x 1)
@@ -155,8 +156,14 @@
 (setq column-number-mode t)
 (autopair-global-mode)
 
-
+;; Ibuffer stuff
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+(when (require 'winner nil 'noerror)
+  (define-key ibuffer-mode-map (kbd "q") 'winner-undo))
+
+;; Full frame stuff
+(after-load 'ibuffer
+  (fullframe ibuffer ibuffer-quit))
 
 ;; /Better defaults
 
@@ -671,35 +678,6 @@ With a prefix argument, insert a newline above the current line."
 (add-to-list 'auto-mode-alist '("\\mk.inc\\'" . makefile-mode))
 (add-to-list 'auto-mode-alist '("\\mk.inc\\'" . makefile-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;               IBUFFER                ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;(setq ibuffer-saved-filter-groups
-;;      '(("home"
-;;	 ("emacs-config" (or (filename . ".emacs.d")
-;;			     (filename . ".emacs")))
-;;	 ("Org" (or (mode . org-mode)
-;;		    (filename . "OrgMode")))
-;;         ("P4" (or (mode . p4-mode)
-;;                   (mode . p4-basic-mode)
-;;                   (mode . p4-basic-list-mode)
-;;                   (mode . p4-opened-list-mode)
-;;                   (mode . p4-status-list-mode)
-;;                   (mode . p4-form-mode)
-;;                   (mode . p4-change-form-mode)
-;;                   (mode . p4-job-form-mode)
-;;                   (mode . p4-filelog-mode)
-;;                   (mode . p4-diff-mode)
-;;                   (mode . p4-annotate-mode)
-;;                   (mode . p4-grep-mode)))
-;;	 ("Help" (or (name . "\*Help\*")
-;;		     (name . "\*Apropos\*")
-;;		     (name . "\*info\*"))))))
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;             IBUFFER END              ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Session.el stuff
 (setq session-save-file "~/.emacs.d/.session")
 (add-hook 'after-init-hook 'session-initialize)
