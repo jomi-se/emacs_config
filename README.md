@@ -7,6 +7,7 @@ It won't download any packages for you.
 ## ELPA/MELPA packages
 The following are all packages installed through package-list-packages
 
+* auto-dictionary
 * autopair
 * buffer-move
 * cl-lib
@@ -19,6 +20,10 @@ The following are all packages installed through package-list-packages
 * flx-ido
 * flycheck
 * flycheck-tip
+* flyspell-correct
+* flyspell-correct-helm
+* flyspell-popup
+* flyspell-lazy
 * ggtags
 * haskell-mode
 * helm

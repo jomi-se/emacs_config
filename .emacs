@@ -43,7 +43,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")) t)
  '(package-selected-packages
    (quote
-    (helm-xref helm-projectile xref-js2 fullframe ibuffer-vc session js2-mode helm-gtags ggtags vala-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-theme-buffer-local multi-term markdown-mode xah-replace-pairs helm highlight-symbol jdee p4 autopair rainbow-delimiters smex ido-vertical-mode flx-ido rainbow-mode company-distel flycheck-tip flycheck company popup sparql-mode plantuml-mode xcscope evil yasnippet volatile-highlights org-plus-contrib buffer-move magit zenburn-theme scion haskell-mode cl-lib)))
+    (flyspell-lazy flyspell-popup flyspell-correct-helm flyspell-correct auto-dictionary helm-xref helm-projectile xref-js2 fullframe ibuffer-vc session js2-mode helm-gtags ggtags vala-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-theme-buffer-local multi-term markdown-mode xah-replace-pairs helm highlight-symbol jdee p4 autopair rainbow-delimiters smex ido-vertical-mode flx-ido rainbow-mode company-distel flycheck-tip flycheck company popup sparql-mode plantuml-mode xcscope evil yasnippet volatile-highlights org-plus-contrib buffer-move magit zenburn-theme scion haskell-mode cl-lib)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")) t)
  '(plantuml-jar-path "/path/to/Plantuml/plantuml.jar" t)
  '(session-use-package t nil (session))
@@ -759,6 +759,79 @@ With a prefix argument, insert a newline above the current line."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;          ERLANG CONFIG END           ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;           SPELL-CHECKING             ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;; Variable names taken from spacemacs
+(defvar spell-checking-enable-by-default t
+  "Enable spell checking by default.")
+
+(defvar spell-checking-enable-auto-dictionary t
+  "Specify if auto-dictionary should be enabled or not.")
+
+(defvar enable-flyspell-auto-completion nil
+  "If not nil, show speeling suggestions in popups.")
+
+(defun my-setup-spell-check ()
+  "Set up all spell check stuff"
+  (require 'auto-dictionary)
+  (require 'flyspell)
+  (require 'flyspell-correct)
+  (require 'flyspell-correct-helm)
+  (when 'enable-flyspell-auto-completion
+    (require 'flyspell-popup)
+    (define-key flyspell-mode-map (kbd "C-!") #'flyspell-popup-correct))
+  (require 'flyspell-lazy)
+
+  ;; {{ flyspell setup for js2-mode (taken from bin chen)
+  (defun js-flyspell-verify ()
+    (let* ((f (get-text-property (- (point) 1) 'face)))
+      ;; *whitelist*
+      ;; only words with following font face will be checked
+      (memq f '(js2-function-call
+                js2-function-param
+                js2-object-property
+                font-lock-variable-name-face
+                font-lock-string-face
+                font-lock-function-name-face
+                font-lock-builtin-face
+                rjsx-tag
+                rjsx-attr))))
+  (put 'js2-mode 'flyspell-mode-predicate 'js-flyspell-verify)
+  ;; }}
+  (after-load 'flyspell
+    '((progn )
+     (require 'flyspell-lazy)
+     (flyspell-lazy-mode 1)))
+  (setq ispell-program-name "aspell")
+  ;;(setq-default ispell-extra-args "--sug-mode=ultra"
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+  (add-hook 'text-mode-hook 'flyspell-mode)
+  (global-set-key (kbd "C-$") 'flyspell-auto-correct-word)
+  (global-set-key (kbd "C-!") 'flyspell-correct-previous-word-generic)
+  (global-set-key (kbd "C-c s b") 'flyspell-buffer)
+  (global-set-key (kbd "C-c s n") 'flyspell-goto-next-error)
+  (defun my-change-dictionary ()
+    "Call the correct change dictionary version depending on whether
+auto-dictionary is enabled or not"
+    (if 'spell-checking-enable-auto-dictionary
+        (adict-change-dictionary)
+      (call-interactively 'ispell-change-dictionary)))
+  (when 'spell-checking-enable-auto-dictionary
+    (add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1)))))
+
+(if (and (executable-find "aspell")
+         'spell-checking-enable-by-default)
+    (my-setup-spell-check)
+  (message "aspell not found, no spell-checking available"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;           SPELL-CHECKING END         ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 ;; Kconfig Major Mode (taken from https://github.com/y2q-actionman/Kconfig-Mode.git)
 (load-library "~/.emacs.d/Kconfig-Mode/kconfig-mode.el")
