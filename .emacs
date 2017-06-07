@@ -46,7 +46,8 @@
     (helm-xref helm-projectile xref-js2 fullframe ibuffer-vc session js2-mode helm-gtags ggtags vala-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-theme-buffer-local multi-term markdown-mode xah-replace-pairs helm highlight-symbol jdee p4 autopair rainbow-delimiters smex ido-vertical-mode flx-ido rainbow-mode company-distel flycheck-tip flycheck company popup sparql-mode plantuml-mode sr-speedbar xcscope evil yasnippet volatile-highlights org-plus-contrib buffer-move magit zenburn-theme scion haskell-mode cl-lib)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")) t)
  '(plantuml-jar-path "/path/to/Plantuml/plantuml.jar" t)
- '(sparql-indent-offset 4 t)
+ '(session-use-package t nil (session))
+ '(sparql-indent-offset 4)
  '(speedbar-tag-hierarchy-method (quote (speedbar-prefix-group-tag-hierarchy)))
  '(speedbar-tag-regroup-maximum-length 50)
  '(vc-annotate-background "#2B2B2B" t)
@@ -702,6 +703,9 @@ With a prefix argument, insert a newline above the current line."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;             IBUFFER END              ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Session.el stuff
+(setq session-save-file "~/.emacs.d/.session")
+(add-hook 'after-init-hook 'session-initialize)
 
 ;; yasnippet stuff
 (require 'yasnippet)
