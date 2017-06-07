@@ -120,10 +120,10 @@
 
 (setq uniquify-buffer-name-style 'forward)
 
-(ido-mode t)
+;; (ido-mode t)
 (setq-default ido-enable-flex-matching t)
-(ido-vertical-mode)
-(ido-vertical-mode 1)
+;; (ido-vertical-mode)
+;; (ido-vertical-mode 1)
 (setq-default ido-vertical-define-keys 'C-n-C-p-up-and-down)
 ;; TODO: add a viariable or something to choose between smex or helm
 ;; Maybe add a lightweight v/s helm config?
@@ -166,9 +166,6 @@
 
 ;; Line numbers on all modes
 (global-linum-mode t)
-
-;; Don't switch frames when calling switch buffer if target buffer is already open in another frame
-(setq ido-default-buffer-method 'selected-window)
 
 ;; org-mode modifications
 (require 'org)
