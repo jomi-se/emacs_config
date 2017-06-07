@@ -134,6 +134,15 @@
   "Kill up to, but not including ARGth occurrence of CHAR." t)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 
+;; From Purcell's utils
+(if (fboundp 'with-eval-after-load)
+    (defalias 'after-load 'with-eval-after-load)
+  (defmacro after-load (feature &rest body)
+    "After FEATURE is loaded, evaluate BODY."
+    (declare (indent defun))
+    `(eval-after-load ,feature
+       '(progn ,@body))))
+
 ;; Hippie expand stuff
 (global-set-key (kbd "M-/") 'hippie-expand)
 (setq hippie-expand-try-functions-list
@@ -495,9 +504,70 @@ With a prefix argument, insert a newline above the current line."
 (defun insert-current-date () (interactive)
        (insert (shell-command-to-string "echo -n $(date +%d-%m-%Y)")))
 
-;; JavaScript stuff
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;              JAVASCRIPT              ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'js2-mode)
+(require 'flycheck)
+
+(defcustom preferred-javascript-mode
+  (first (remove-if-not #'fboundp '(js2-mode js-mode)))
+  "Javascript mode to use for .js files."
+  :type 'symbol
+  :group 'programming
+  :options '(js2-mode js-mode))
+
+(defconst preferred-javascript-indent-level 2)
+
+;; Need to first remove from list if present, since elpa adds entries too, which
+;; may be in an arbitrary order
+;; This is the equivalent of doing something like:
+;; redefine A = New-list-entry + (A - js-modes)
+(eval-when-compile (require 'cl))
+(setq auto-mode-alist (cons `("\\.\\(js\\|es6\\)\\(\\.erb\\)?\\'" . ,preferred-javascript-mode)
+                            (loop for entry in auto-mode-alist
+                                  unless (eq preferred-javascript-mode (cdr entry))
+                                  collect entry)))
+
 (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
+
+(setq js2-idle-timer-delay 2)
+;; Change some defaults: customize them to override
+(setq-default js2-basic-offset 2
+              js2-bounce-indent-p nil)
+(after-load 'js2-mode
+  ;; Disable js2 mode's syntax error highlighting by default...
+  (setq-default js2-mode-show-parse-errors t
+                js2-mode-show-strict-warnings t)
+  ;; ... but enable it if flycheck can't handle javascript
+  (autoload 'flycheck-get-checker-for-buffer "flycheck")
+   (defun sanityinc/disable-js2-checks-if-flycheck-active ()
+     (unless (flycheck-get-checker-for-buffer)
+       (set (make-local-variable 'js2-mode-show-parse-errors) t)
+       (set (make-local-variable 'js2-mode-show-strict-warnings) t)))
+  (add-hook 'js2-mode-hook 'sanityinc/disable-js2-checks-if-flycheck-active)
+
+  (add-hook 'js2-mode-hook (lambda () (setq mode-name "JS2")
+
+  (after-load 'js2-mode
+    (js2-imenu-extras-setup)))))
+
+(setq-default js-indent-level preferred-javascript-indent-level)
+
+;;Javascript nests {} and () a lot, so I find this helpful
+(if (and (executable-find "ag")
+         (require 'xref-js2 nil 'noerror))
+    (after-load 'js2-mode
+      (define-key js2-mode-map (kbd "M-.") nil)
+      (add-hook 'js2-mode-hook
+                (lambda () (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
+  (message "ag or xref-js2 missing"))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;          END JAVASCRIPT              ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -582,7 +652,8 @@ With a prefix argument, insert a newline above the current line."
 
 (with-eval-after-load 'helm-semantic
       (push '(c-mode . semantic-format-tag-summarize) helm-semantic-display-style)
-      (push '(c++-mode . semantic-format-tag-summarize) helm-semantic-display-style))
+      (push '(c++-mode . semantic-format-tag-summarize) helm-semantic-display-style)
+      (push '(js2-mode . semantic-format-tag-summarize) helm-semantic-display-style))
 
 (setq helm-autoresize-max-height 0)
 (setq helm-autoresize-min-height 40)
