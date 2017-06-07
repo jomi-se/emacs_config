@@ -538,6 +538,9 @@ With a prefix argument, insert a newline above the current line."
 
 (require 'helm)
 (require 'helm-config)
+(require 'projectile)
+(require 'helm-projectile)
+(require 'helm-xref)
 
 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
@@ -584,6 +587,29 @@ With a prefix argument, insert a newline above the current line."
 (setq helm-autoresize-max-height 0)
 (setq helm-autoresize-min-height 40)
 (helm-autoresize-mode 1)
+
+(projectile-global-mode)
+(setq projectile-completion-system 'helm)
+(setq projectile-switch-project-action 'helm-projectile-find-file)
+(setq projectile-enable-caching t)
+(helm-projectile-on)
+
+(setq projectile-indexing-method 'alien)
+
+(add-to-list 'projectile-globally-ignored-file-suffixes ".o")
+(add-to-list 'projectile-globally-ignored-file-suffixes ".d")
+(add-to-list 'projectile-globally-ignored-file-suffixes ".Plo")
+(add-to-list 'projectile-globally-ignored-file-suffixes ".Po")
+(add-to-list 'projectile-globally-ignored-file-suffixes ".lo")
+(add-to-list 'projectile-globally-ignored-file-suffixes ".so")
+(add-to-list 'projectile-globally-ignored-file-suffixes ".la")
+(add-to-list 'projectile-globally-ignored-file-suffixes ".pyc")
+(add-to-list 'projectile-globally-ignored-file-suffixes ".min.js")
+(add-to-list 'projectile-globally-ignored-file-suffixes ".gz")
+(add-to-list 'projectile-globally-ignored-file-suffixes ".jpg")
+(add-to-list 'projectile-globally-ignored-file-suffixes ".zip")
+
+(setq xref-show-xrefs-function 'helm-xref-show-xrefs)
 
 (helm-mode 1)
 
