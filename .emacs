@@ -43,13 +43,11 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")) t)
  '(package-selected-packages
    (quote
-    (helm-xref helm-projectile xref-js2 fullframe ibuffer-vc session js2-mode helm-gtags ggtags vala-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-theme-buffer-local multi-term markdown-mode xah-replace-pairs helm highlight-symbol jdee p4 autopair rainbow-delimiters smex ido-vertical-mode flx-ido rainbow-mode company-distel flycheck-tip flycheck company popup sparql-mode plantuml-mode sr-speedbar xcscope evil yasnippet volatile-highlights org-plus-contrib buffer-move magit zenburn-theme scion haskell-mode cl-lib)))
+    (helm-xref helm-projectile xref-js2 fullframe ibuffer-vc session js2-mode helm-gtags ggtags vala-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-theme-buffer-local multi-term markdown-mode xah-replace-pairs helm highlight-symbol jdee p4 autopair rainbow-delimiters smex ido-vertical-mode flx-ido rainbow-mode company-distel flycheck-tip flycheck company popup sparql-mode plantuml-mode xcscope evil yasnippet volatile-highlights org-plus-contrib buffer-move magit zenburn-theme scion haskell-mode cl-lib)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")) t)
  '(plantuml-jar-path "/path/to/Plantuml/plantuml.jar" t)
  '(session-use-package t nil (session))
  '(sparql-indent-offset 4)
- '(speedbar-tag-hierarchy-method (quote (speedbar-prefix-group-tag-hierarchy)))
- '(speedbar-tag-regroup-maximum-length 50)
  '(vc-annotate-background "#2B2B2B" t)
  '(vc-annotate-color-map
    (quote
@@ -457,27 +455,6 @@ With a prefix argument, insert a newline above the current line."
 
 ;; Disable suspend func
 (put 'suspend-frame 'disabled t)
-
-(defun my-sr-speedbar-close-and-balance ()
-  (sr-speedbar-close)
-  (balance-windows))
-
-;; Ensure Speedbar is activated
-(defun my-sr-speedbar-toogle-and-expand-current ()
-    (interactive)
-    (setq current-file (buffer-file-name))
-    (if (and (fboundp 'sr-speedbar-exist-p)  (sr-speedbar-exist-p))
-        (my-sr-speedbar-close-and-balance)
-      (sr-speedbar-open)
-      (sr-speedbar-select-window)
-      (speedbar-find-selected-file current-file)
-      (speedbar-expand-line)
-      (sr-speedbar-refresh)))
-
-(global-set-key (kbd "C-<f8>") 'my-sr-speedbar-toogle-and-expand-current)
-
-(setq sr-speedbar-right-side nil)
-(setq sr-speedbar-auto-refresh t)
 
 ;;Multi-term setup
 (require 'multi-term)
