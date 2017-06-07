@@ -100,6 +100,9 @@
   (interactive)
   (load-theme 'hc-zenburn))
 (load-theme 'hc-zenburn)
+
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
 ;;(set-background-color "#152539")
 (fset 'disable-current-theme
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([134217848 100 105 115 97 98 108 101 45 116 104 101 109 101 return tab return] 0 "%d")) arg)))
@@ -189,7 +192,12 @@
 ;;(set-face-background 'hi-black-b' "#3F3F3F")
 ;;(set-face-background 'hi-black-hb' "#DCDCCC")
 
-;; Line numbers on all modes
+;; Line numbers on most modes
+(require 'linum-off)
+(add-to-list 'linum-disabled-modes-list 'term-mode)
+(add-to-list 'linum-disabled-modes-list 'helm-mode)
+(setq linum-disable-starred-buffers t)
+(setq linum-disable-max-file-lines 4000)
 (global-linum-mode t)
 
 ;; org-mode modifications
@@ -479,7 +487,6 @@ With a prefix argument, insert a newline above the current line."
             (add-to-list 'term-bind-key-alist '("M-<next>" . multi-term-next))
             (set-face-attribute 'default (selected-frame) :background "#000000")
             (face-remap-add-relative 'default :background "#000000")
-            (linum-mode 0)
             (setq show-trailing-whitespace nil)))
 
 ;; Activate truncate lines globally
