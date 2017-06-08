@@ -811,10 +811,80 @@ With a prefix argument, insert a newline above the current line."
   ;;(setq-default ispell-extra-args "--sug-mode=ultra"
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'text-mode-hook 'flyspell-mode)
-  (global-set-key (kbd "C-$") 'flyspell-auto-correct-word)
-  (global-set-key (kbd "C-!") 'flyspell-correct-previous-word-generic)
-  (global-set-key (kbd "C-c s b") 'flyspell-buffer)
-  (global-set-key (kbd "C-c s n") 'flyspell-goto-next-error)
+
+  ;; move point to previous error
+  ;; based on code by hatschipuh at
+  ;; http://emacs.stackexchange.com/a/14912/2017
+  (defun flyspell-goto-previous-error (arg)
+    "Go to arg previous spelling error."
+    (interactive "p")
+    (while (not (= 0 arg))
+      (let ((pos (point))
+            (min (point-min)))
+        (if (and (eq (current-buffer) flyspell-old-buffer-error)
+                 (eq pos flyspell-old-pos-error))
+            (progn
+              (if (= flyspell-old-pos-error min)
+                  ;; goto beginning of buffer
+                  (progn
+                    (message "Restarting from end of buffer")
+                    (goto-char (point-max)))
+                (backward-word 1))
+              (setq pos (point))))
+        ;; seek the next error
+        (while (and (> pos min)
+                    (let ((ovs (overlays-at pos))
+                          (r '()))
+                      (while (and (not r) (consp ovs))
+                        (if (flyspell-overlay-p (car ovs))
+                            (setq r t)
+                          (setq ovs (cdr ovs))))
+                      (not r)))
+          (backward-word 1)
+          (setq pos (point)))
+        ;; save the current location for next invocation
+        (setq arg (1- arg))
+        (setq flyspell-old-pos-error pos)
+        (setq flyspell-old-buffer-error (current-buffer))
+        (goto-char pos)
+        (if (= pos min)
+            (progn
+              (message "No more miss-spelled word!")
+              (setq arg 0))
+          (forward-word)))))
+
+  (defun my-flyspell-goto-next-error-repeatable ()
+    "Call call-flyspell-goto-next-error and repeat"
+    (interactive)
+    (flyspell-goto-next-error)
+    (let ((repeat-key last-command-event))
+      (unless (current-message)
+        (message "(Type %s to repeat goto next error)" (format-kbd-macro (vector repeat-key) nil)))
+      (set-transient-map
+       (let ((map (make-sparse-keymap)))
+         (define-key map (vector repeat-key)
+           `my-flyspell-goto-next-error-repeatable)
+         map))))
+  (defun my-flyspell-goto-previous-error-repeatable ()
+    "Call call-flyspell-goto-next-error and repeat"
+    (interactive)
+    (flyspell-goto-previous-error 1)
+    (backward-word)
+    (let ((repeat-key last-command-event))
+      (unless (current-message)
+        (message "(Type %s to repeat goto next error)" (format-kbd-macro (vector repeat-key) nil)))
+      (set-transient-map
+       (let ((map (make-sparse-keymap)))
+         (define-key map (vector repeat-key)
+           `my-flyspell-goto-previous-error-repeatable)
+         map))))
+
+  (define-key flyspell-mode-map (kbd "C-c s n") 'my-flyspell-goto-next-error-repeatable)
+  (define-key flyspell-mode-map (kbd "C-c s p") 'my-flyspell-goto-previous-error-repeatable)
+  (define-key flyspell-mode-map (kbd "C-$") 'flyspell-auto-correct-word)
+  (define-key flyspell-mode-map (kbd "C-!") 'flyspell-correct-previous-word-generic)
+  (define-key flyspell-mode-map (kbd "C-c s b") 'flyspell-buffer)
+
   (defun my-change-dictionary ()
     "Call the correct change dictionary version depending on whether
 auto-dictionary is enabled or not"
