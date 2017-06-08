@@ -43,7 +43,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")) t)
  '(package-selected-packages
    (quote
-    (flyspell-lazy flyspell-popup flyspell-correct-helm flyspell-correct auto-dictionary helm-xref helm-projectile xref-js2 fullframe ibuffer-vc session js2-mode helm-gtags ggtags vala-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-theme-buffer-local multi-term markdown-mode xah-replace-pairs helm highlight-symbol jdee p4 autopair rainbow-delimiters smex ido-vertical-mode flx-ido rainbow-mode company-distel flycheck-tip flycheck company popup sparql-mode plantuml-mode xcscope evil yasnippet volatile-highlights org-plus-contrib buffer-move magit zenburn-theme scion haskell-mode cl-lib)))
+    (bind-key flyspell-lazy flyspell-popup flyspell-correct-helm flyspell-correct auto-dictionary helm-xref helm-projectile xref-js2 fullframe ibuffer-vc session js2-mode helm-gtags ggtags vala-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-theme-buffer-local multi-term markdown-mode xah-replace-pairs helm highlight-symbol jdee p4 autopair rainbow-delimiters smex ido-vertical-mode flx-ido rainbow-mode company-distel flycheck-tip flycheck company popup sparql-mode plantuml-mode xcscope evil yasnippet volatile-highlights org-plus-contrib buffer-move magit zenburn-theme scion haskell-mode cl-lib)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")) t)
  '(plantuml-jar-path "/path/to/Plantuml/plantuml.jar" t)
  '(session-use-package t nil (session))
@@ -84,8 +84,9 @@
  '(term-color-white ((t (:background "#000000" :foreground "#FFFFFF")))))
 
 ;; Set keybindings to move between windows in a single frame using the arrow keys and Shift
-(global-set-key (kbd "C-;") 'other-window)
-(global-set-key (kbd "C-,") 'prev-window)
+(require 'bind-key)
+(bind-key* (kbd "C-;") 'other-window)
+(bind-key* (kbd "C-,") 'prev-window)
 
 (defun prev-window ()
   (interactive)
@@ -133,7 +134,7 @@
 
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR." t)
-(global-set-key (kbd "M-z") 'zap-up-to-char)
+(bind-key* (kbd "M-z") 'zap-up-to-char)
 
 ;; From Purcell's utils
 (if (fboundp 'with-eval-after-load)
@@ -145,7 +146,7 @@
        '(progn ,@body))))
 
 ;; Hippie expand stuff
-(global-set-key (kbd "M-/") 'hippie-expand)
+(bind-key* (kbd "M-/") 'hippie-expand)
 (setq hippie-expand-try-functions-list
       '(try-complete-file-name-partially
         try-complete-file-name
@@ -176,7 +177,7 @@
 (autopair-global-mode)
 
 ;; Ibuffer stuff
-(global-set-key (kbd "C-x C-b") 'ibuffer)
+(bind-key* (kbd "C-x C-b") 'ibuffer)
 (when (require 'winner nil 'noerror)
   (define-key ibuffer-mode-map (kbd "q") 'winner-undo))
 
@@ -248,8 +249,8 @@ With a prefix argument, insert a newline above the current line."
   (if abovep
       (vi-open-line-above)
     (vi-open-line-below)))
-(global-set-key (kbd "<C-return>") 'vi-open-line)
-(global-set-key (kbd "<C-S-return>") 'vi-open-line-above)
+(bind-key* (kbd "<C-return>") 'vi-open-line)
+(bind-key* (kbd "<C-S-return>") 'vi-open-line-above)
 
 ;; Show trailing whitespaces
 ;; Format can be changed using the trailing-whitespace "face"
@@ -288,7 +289,7 @@ With a prefix argument, insert a newline above the current line."
       (select-window first-win)
       (if this-win-2nd (other-window 1))))))
 
-(global-set-key (kbd "C-x |") 'toggle-window-split)
+(bind-key* (kbd "C-x |") 'toggle-window-split)
 
 ;; P4 in emacs
 (require 'p4)
@@ -354,10 +355,10 @@ With a prefix argument, insert a newline above the current line."
   (my-increment-number-decimal (if arg (- arg) -1)))
 
 ;; Buffer move keybindings
-(global-set-key (kbd "<C-S-up>")     'buf-move-up)
-(global-set-key (kbd "<C-S-down>")   'buf-move-down)
-(global-set-key (kbd "<C-S-left>")   'buf-move-left)
-(global-set-key (kbd "<C-S-right>")  'buf-move-right)
+(bind-key* (kbd "<C-S-up>")     'buf-move-up)
+(bind-key* (kbd "<C-S-down>")   'buf-move-down)
+(bind-key* (kbd "<C-S-left>")   'buf-move-left)
+(bind-key* (kbd "<C-S-right>")  'buf-move-right)
 
 ;; Highlight and search next occurrence with C-* (C-u C-* for prev)
 (require 'highlight-symbol)
@@ -390,8 +391,8 @@ With a prefix argument, insert a newline above the current line."
   (if prev
       (my-highlight-and-search-prev)
     (my-highlight-and-search-next)))
-(global-set-key (kbd "C-*") 'my-emulate-vim-search-symbol-at-point)
-(global-set-key (kbd "C-S-*") 'my-highlight-and-search-prev)
+(bind-key* (kbd "C-*") 'my-emulate-vim-search-symbol-at-point)
+(bind-key* (kbd "C-S-*") 'my-highlight-and-search-prev)
 
 ;; C PROGRAMMING HOOKS
 ;; Set linux kernel C programming style
@@ -599,19 +600,19 @@ With a prefix argument, insert a newline above the current line."
 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
 ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-(global-set-key (kbd "C-c h") 'helm-command-prefix)
+(bind-key* (kbd "C-c h") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-c h o") 'helm-occur)
-(global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
-(global-set-key (kbd "C-x b") 'helm-mini)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(bind-key* (kbd "M-y") 'helm-show-kill-ring)
+(bind-key* (kbd "M-x") 'helm-M-x)
+(bind-key* (kbd "C-c h o") 'helm-occur)
+(global-set-key (kbd "C-h <SPC>") 'helm-all-mark-rings)
+(bind-key* (kbd "C-x b") 'helm-mini)
+(bind-key* (kbd "C-x C-f") 'helm-find-files)
 
 (when (executable-find "curl")
   (setq helm-net-prefer-curl t))

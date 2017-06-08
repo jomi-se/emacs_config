@@ -9,6 +9,7 @@ The following are all packages installed through package-list-packages
 
 * auto-dictionary
 * autopair
+* bind-key
 * buffer-move
 * cl-lib
 * color-theme-buffer-local
