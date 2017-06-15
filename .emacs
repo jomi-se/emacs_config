@@ -596,6 +596,7 @@ With a prefix argument, insert a newline above the current line."
 (require 'projectile)
 (require 'helm-projectile)
 (require 'helm-xref)
+(require 'helm-gtags)
 
 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
@@ -603,9 +604,10 @@ With a prefix argument, insert a newline above the current line."
 (bind-key* (kbd "C-c h") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
 
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+(bind-keys :map helm-map
+           ("<tab>" . helm-execute-persistent-action) ; rebind tab to run persistent action
+           ("C-i" . helm-execute-persistent-action) ; make TAB work in terminal
+           ("C-z" .  helm-select-action)) ; list actions using C-z
 
 (bind-key* (kbd "M-y") 'helm-show-kill-ring)
 (bind-key* (kbd "M-x") 'helm-M-x)
@@ -643,6 +645,23 @@ With a prefix argument, insert a newline above the current line."
 (setq helm-autoresize-max-height 0)
 (setq helm-autoresize-min-height 40)
 (helm-autoresize-mode 1)
+
+(setq
+ helm-gtags-ignore-case t
+ helm-gtags-use-input-at-cursor t
+ helm-gtags-pulse-at-cursor t
+ helm-gtags-suggested-key-mapping t
+ )
+
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+
+(bind-keys :map helm-gtags-mode-map
+           ("C-c g a" . helm-gtags-tags-in-this-function)
+           ("M-." . helm-gtags-dwim)
+           ("M-," . helm-gtags-pop-stack)
+           ("C-c <" . helm-gtags-previous-history)
+           ("C-c >" . helm-gtags-next-history))
 
 (projectile-global-mode)
 (setq projectile-completion-system 'helm)
