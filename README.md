@@ -28,6 +28,7 @@ The following are all packages installed through package-list-packages
 * ggtags
 * haskell-mode
 * helm
+* helm-ag
 * helm-gtags
 * highlight-symbol
 * ido-vertical-mode
