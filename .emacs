@@ -422,22 +422,30 @@ With a prefix argument, insert a newline above the current line."
 (add-hook 'c-mode-hook
 	  (lambda () (local-set-key (kbd "C-c -") 'my-decrement-number-decimal)))
 
-
-(add-hook 'c-mode-hook
-	  (lambda () (cscope-minor-mode)))
-
-;; Activate semantic mode when in C-mode
+;; Activate semantic mode
 (require 'semantic/sb)
-(add-hook 'c-mode-hook
-          (lambda () (semantic-mode 1)))
-(add-to-list 'load-path "~/.emacs.d/ecb")
-(require 'ecb)
+(semantic-mode 1)
+(require 'ede)
+(global-ede-mode)
+;; Add the following to a .dir-locals.el at the root of a C/C++ project for completion stuff
+;; (eval ede-cpp-root-project "Test" :name "Test Project" :file "~/Path/to/file/in/project/root" :include-path
+;;       (quote
+;;        ("/"))
+;;       :system-include-path
+;;       (quote
+;;        ("~/path/to/project/include1" "~/path/to/project/include2")))
 
 ;; END OF C PROGRAMMING HOOKS
 
-;; xcscope configuration
-(setq cscope-option-use-inverted-index 't)
-(setq cscope-option-do-not-update-database 't)
+;; Semantic configuration
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+(global-semanticdb-minor-mode 1)
+(global-semantic-idle-scheduler-mode 1)
+(global-semantic-decoration-mode 0)
+(global-semantic-idle-summary-mode 1)
+(semanticdb-enable-gnu-global-databases 'c-mode t)
+(semanticdb-enable-gnu-global-databases 'c++-mode t)
 
 ;; Source: http://www.emacswiki.org/emacs-en/download/misc-cmds.el
 (defun revert-buffer-no-confirm ()
@@ -628,8 +636,6 @@ With a prefix argument, insert a newline above the current line."
       helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
       helm-ff-file-name-history-use-recentf t
       helm-echo-input-in-header-line 	    t)
-
-(global-semanticdb-minor-mode 1)
 
 ;; Use this to toggle opening helm buffer inside current window, not occupy whole other window
 (defun my-toggle-helm-use-whole-frame-when-in-split-window ()
